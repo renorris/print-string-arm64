@@ -7,10 +7,8 @@ print_string:
     mov x9, x0 // x9 stores the original memory address
 
 print_string_loop:
-    add x8, x8, #1 // Increment address counter
-    ldrb w10, [x8] // Load value of current address into w10
-    cmp w10, #0 // Check if we're at the end of the string
-    b.ne print_string_loop // Loop again if we haven't reached the end
+    ldrb w10, [x8, 1]! // Load value of next address into w10
+    cbnz w10, print_string_loop // Check if we're at the end of the string
 
     mov x0, #1 // stdout = 1
     mov x1, x9 // Move start address into second argument
@@ -29,4 +27,4 @@ _main:
     mov x16, #1 // terminate syscall = 1
     svc #0x80 // exit
 
-example_cstring: .ascii "This is a null terminated string.\nHere's another line!\n\0"
+example_cstring: .asciz "This is a null terminated string.\nHere's another line!\n"
